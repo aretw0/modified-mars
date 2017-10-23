@@ -3,6 +3,7 @@ package mars.tools;
 import mars.mips.hardware.AccessNotice;
 import mars.mips.hardware.Memory;
 import mars.mips.hardware.MemoryAccessNotice;
+import mars.so.processmanager.ProcessTable;
 import mars.util.SystemIO;
 
 import java.awt.*;
@@ -10,11 +11,12 @@ import java.util.Observable;
 
 import javax.swing.*;
 
-//@SuppressWarnings("serial")
+@SuppressWarnings("serial")
 public class InterruptSimulator extends AbstractMarsToolAndApplication {
 	private static String name    = "Interrupt Simulator";
 	private static String heading =  "Generates process changes";
 	private static String version = "Version 1.0 (Arthur)";
+	public static boolean canExec = true;
 	
 	protected int lastAddress = -1; // comparativo de endereço
     /**
@@ -140,25 +142,26 @@ public class InterruptSimulator extends AbstractMarsToolAndApplication {
 	
 //  @Override
 	protected void processMIPSUpdate(Observable memory, AccessNotice notice) {
+		canExec = true;
 		if (notice.getAccessType() != AccessNotice.READ) return;
 		MemoryAccessNotice m = (MemoryAccessNotice) notice;
 		int a = m.getAddress();
 		if (a == lastAddress) return;
-		lastAddress = a;
-		++counter;
-		if(timerOn.isSelected()) {
-			++countInst;
-			SystemIO.printString("-- Interrupção Ligada!\n");
-			if (countInst > (int)timerConfig.getValue()) {
-				SystemIO.printString("-- Hora de trocar!\n");
-				++countInter; // incrementa interrupções
-				countInst = 0; // zera o progressBar
-				// chame a troca de processos!!!
+		if (ProcessTable.getExeProc() != null) {
+			lastAddress = a;
+			++counter;
+			if(timerOn.isSelected()) {
+				++countInst;
+				if (countInst > (int)timerConfig.getValue()) {
+					canExec = false;
+					SystemIO.printString("-- Hora de trocar!\n");
+					++countInter; // incrementa interrupções
+					countInst = 0; // zera o progressBar				
+					ProcessTable.processChange("roteamento");
+				}
 			}
+			updateDisplay();
 		}
-		else
-			SystemIO.printString("-- Interrupção desligada!\n");
-		updateDisplay();
 	}
 	
 //  @Override

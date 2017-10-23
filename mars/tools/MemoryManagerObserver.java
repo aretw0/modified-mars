@@ -12,8 +12,8 @@ import mars.*;
 import mars.mips.hardware.AccessNotice;
 import mars.mips.hardware.Memory;
 import mars.mips.hardware.MemoryAccessNotice;
-import mars.mips.so.memorymanager.MemoryManager;
-import mars.mips.so.processmanager.ProcessTable;
+import mars.so.memorymanager.MemoryManager;
+import mars.so.processmanager.ProcessTable;
 import mars.util.SystemIO;
 	
 /*

@@ -3,7 +3,7 @@ package mars.so.memorymanager;
 import java.util.ArrayList;
 import java.util.List;
 
-import mars.mips.so.processmanager.ProcessTable;
+import mars.so.processmanager.ProcessTable;
 import mars.tools.MemoryManagerObserver;
 import mars.util.SystemIO;
 

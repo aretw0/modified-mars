@@ -112,7 +112,7 @@ public class ProcessTable {
 	}
 	
 	public static int getFirstAdress(){
-		int menor = 2147483647;
+		int menor = Integer.MAX_VALUE;
 		for (ProcessControlBlock pcb : processList){
 			if (pcb.getEndInicio() < menor)
 				menor = pcb.getEndInicio();
