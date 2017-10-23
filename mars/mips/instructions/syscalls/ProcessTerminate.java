@@ -3,7 +3,7 @@ package mars.mips.instructions.syscalls;
 import mars.ProcessingException;
 import mars.ProgramStatement;
 import mars.mips.hardware.RegisterFile;
-import mars.mips.so.processmanager.ProcessTable;
+import mars.so.processmanager.ProcessTable;
 
 public class ProcessTerminate extends AbstractSyscall {
 	
@@ -25,7 +25,7 @@ public class ProcessTerminate extends AbstractSyscall {
 			ProcessTable.processTerminate("prioridadeFixa");
 			break;
 		case 3:
-			ProcessTable.processTerminate("prioridadeDinâmica");
+			ProcessTable.processTerminate("prioridadeDinï¿½mica");
 			break;
 		case 4:
 			ProcessTable.processTerminate("loteria");

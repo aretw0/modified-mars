@@ -6,8 +6,8 @@ import java.util.List;
 import mars.ProcessingException;
 import mars.ProgramStatement;
 import mars.mips.hardware.RegisterFile;
-import mars.mips.so.processmanager.ProcessControlBlock;
-import mars.mips.so.processmanager.ProcessTable;
+import mars.so.processmanager.ProcessControlBlock;
+import mars.so.processmanager.ProcessTable;
 import mars.util.SystemIO;
 
 public class Fork extends AbstractSyscall {
