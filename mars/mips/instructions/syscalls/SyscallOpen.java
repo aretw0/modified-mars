@@ -89,6 +89,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             {
                throw new ProcessingException(statement, e);
             }
+         // tudo acontece aqui
          int retValue = SystemIO.openFile(filename,
                                  RegisterFile.getValue(5));
          RegisterFile.updateRegister(2, retValue); // set returned fd value in register
@@ -97,13 +98,13 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			// USER PROGRAM TO CHECK FOR BAD FILE OPEN.  MARS SHOULD NOT PRE-EMPTIVELY
 			// TERMINATE MIPS EXECUTION BECAUSE OF IT.  Thanks to UCLA student
 			// Duy Truong for pointing this out.  DPS 28-July-2009.
-         /*
+         
 			if (retValue < 0) // some error in opening file
          {
             throw new ProcessingException(statement,
                 SystemIO.getFileErrorMessage()+" (syscall "+this.getNumber()+")", 
 					 Exceptions.SYSCALL_EXCEPTION);
          } 
-			*/
+		
       }
    }

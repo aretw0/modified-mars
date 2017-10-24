@@ -11,6 +11,40 @@
     syscall
 .end_macro
 
+#macro para abrir arquivo - (arquivo, flags - 1 write - 0 read, modo de abertura) 
+.macro openFile(%file,%flag,%mode)
+    li $v0, 13
+    la $a0, %file
+    li $a1, %flag
+    li $a2, %mode
+    syscall
+.end_macro
+
+#macro para fechar arquivo
+.macro closeFile()
+    li $v0, 16
+    add $a0,$s0, $zero # file descriptor devera estar salvo em $s0
+    syscall
+.end_macro
+
+#macro para ler arquivo - (arquivo, end. do buffer de entrada, tamanho da leitura) 
+.macro readFile(%buffer,%max)
+    li $v0, 14
+    add $a0,$s0,$zero # file descriptor devera estar salvo em $s0
+    la $a1, %buffer
+    li $a2, %max
+    syscall
+.end_macro
+
+#macro para ler arquivo - (end. do buffer de saida, tamanho da escrita) 
+.macro writeFile(%buffer,%max)
+    li $v0, 15
+    add $a0,$s0,$zero #file descriptor devera estar salvo em $s0
+    la $a1, %buffer
+    li $a2, %max
+    syscall
+.end_macro
+
 #macro para fork
 .macro fork (%val1, %val, %val2, %val3, %val4) 
 	#parâmetros referenciados %val
