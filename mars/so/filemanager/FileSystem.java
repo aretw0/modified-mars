@@ -62,17 +62,17 @@ public class FileSystem {
 			boolean exist = false;
 			System.out.println(" Dir : " + dir.toString());
 			if (dir instanceof  Directory) {
-				System.out.println("dir é instance of directory");
+				System.out.println("dir ï¿½ instance of directory");
 				for (File file : ((Directory)dir).getFiles()) {
 					if (file.getName().equals(st)) {
-						//diretório existe
+						//diretï¿½rio existe
 						dir = file;
 						exist = true;
 						break;
 					}
 				}
 				if (!exist) {
-					//diretorio não existe, criar um novo
+					//diretorio nï¿½o existe, criar um novo
 					Directory file = new Directory();
 					file.setName(st);
 					file.setMyFather(dir);
@@ -80,7 +80,7 @@ public class FileSystem {
 					dir = file;
 				}
 			}else {
-				//dir não é um diretorio
+				//dir nï¿½o ï¿½ um diretorio
 				if (st.equals(dir.getName())) {
 					
 				}
@@ -135,7 +135,7 @@ public class FileSystem {
 		return null;
 	}
 	
-	/*public static void saveFiles() {
+	public static void saveFiles() {
 		FileWriter arq;
 		try {
 			arq = new FileWriter("Files.txt");
@@ -235,5 +235,5 @@ public class FileSystem {
 		} catch (RuntimeException | IOException e){
 			e.printStackTrace();
 		}
-	}*/
+	}
 }
