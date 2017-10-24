@@ -8,7 +8,7 @@ public class FileProtection {
 	private boolean x;
 
 	public FileProtection() {
-		// TODO Auto-generated constructor stub
+
 	}
 	public FileProtection(int id, boolean r, boolean w, boolean x) {
 		this.idRole = id;

@@ -1,50 +1,49 @@
 package mars.so.filemanager;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class Directory {
+public class Directory extends File{
 	
 	private int mySelf;
 	private int myFather;
-	private Inode inode;
-	private List<String> files;
-	private int[] idNodes;
+	private List<File> files;
 
-	public Directory(int mySelf, int myFather, Inode inode, List<String> files,
+	public Directory(int mySelf, int myFather, Inode inode, List<File> files,
 			int[] idNodes) {
 		super();
 		this.mySelf = mySelf;
 		this.myFather = myFather;
-		this.inode = inode;
 		this.files = files;
-		this.idNodes = idNodes;
 	}
 
 	public Directory() {
-		// TODO Auto-generated constructor stub
+		files = new ArrayList<File>();
 	}
 
-	public Inode getInode() {
-		return inode;
-	}
-
-	public void setInode(Inode inode) {
-		this.inode = inode;
-	}
-
-	public List<String> getFiles() {
+	public List<File> getFiles() {
 		return files;
 	}
 
-	public void setFiles(List<String> files) {
+	public void setFiles(List<File> files) {
 		this.files = files;
 	}
 
-	public int[] getIdNodes() {
-		return idNodes;
+	public int getMySelf() {
+		return mySelf;
 	}
 
-	public void setIdNodes(int[] idNodes) {
-		this.idNodes = idNodes;
+	public void setMySelf(int mySelf) {
+		this.mySelf = mySelf;
 	}
+
+	public int getMyFather() {
+		return myFather;
+	}
+
+	public void setMyFather(int myFather) {
+		this.myFather = myFather;
+	}
+
+
 }

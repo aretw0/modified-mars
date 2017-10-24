@@ -1,18 +1,26 @@
 package mars.mips.instructions.syscalls;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import mars.ProcessingException;
 import mars.ProgramStatement;
 import mars.mips.hardware.RegisterFile;
+import mars.so.filemanager.Directory;
+import mars.so.filemanager.File;
+import mars.so.filemanager.FileSystem;
 import mars.so.processmanager.ProcessControlBlock;
 import mars.so.processmanager.ProcessTable;
 import mars.util.SystemIO;
 
 public class Fork extends AbstractSyscall {
 			
-	private int numCall; 	
+	private int numCall; 
+	public boolean hasLoad = false;
 
 	public Fork() {
 		super(18, "WeFork"); // foi o nome que dei
@@ -21,6 +29,22 @@ public class Fork extends AbstractSyscall {
 
 	@Override
 	public void simulate(ProgramStatement statement) throws ProcessingException {
+		if (!hasLoad) {
+			BufferedReader br;
+			try {
+//				br = new BufferedReader(new FileReader("arquivos.txt"));
+//			    String line = br.readLine();
+//
+//			    while (line != null) {
+//			    	String [] parans = line.split("#");
+//			    	FileSystem.getAllFiles().add(new File());
+//			        line = br.readLine();
+//			    }
+//			    br.close();
+			} catch (RuntimeException | IOException e){
+				e.printStackTrace();
+			}
+		}
 		List<Integer> temp = new ArrayList<Integer>();
 		for (int i = 0; i < RegisterFile.getRegisters().length;i++){
 			temp.add(RegisterFile.getValue(i));

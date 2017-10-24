@@ -1,7 +1,8 @@
 package mars.so.filemanager;
 
 public class File {
-	
+
+	private String name; // nome do arquivo
 	private Inode inode;
 
 	public File(Inode inode) {
@@ -10,7 +11,7 @@ public class File {
 	}
 
 	public File() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public Inode getInode() {
@@ -19,5 +20,18 @@ public class File {
 
 	public void setInode(Inode inode) {
 		this.inode = inode;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	@Override
+	public String toString() {
+		return name+"#"+FileSystem.getAllInodes().indexOf(inode);
 	}
 }

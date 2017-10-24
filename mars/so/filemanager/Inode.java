@@ -5,7 +5,6 @@ import java.util.List;
 
 public class Inode {
 	
-	private String name; // nome do arquivo
 	private int idOwner; // id do dono
 	private List<FileProtection> rules;
 //	private byte[] byteSize;  // qual tipo de dado, ver ainda
@@ -15,7 +14,8 @@ public class Inode {
 	private String dateChange; // data de modificação
 	private Boolean hide; // flag para ocultar o arquivo
 
-	private int[] blocks;
+	private String [] blocks;
+	private Inode nextBlock;
 
 	/* Os 7 primeiros endereços correspondem aos endereços do disco
 	indicados pelo gerenciador de espaço livre
@@ -25,9 +25,8 @@ public class Inode {
 	
 	public Inode(String name, int idOwner, List<FileProtection> rules,
 			int byteSize, int blockSize, String dateBirth, String dateChange,
-			Boolean hide, int[] blocks) {
+			Boolean hide, String [] blocks) {
 		super();
-		this.name = name;
 		this.idOwner = idOwner;
 		this.rules = rules;
 		this.byteSize = byteSize;
@@ -39,17 +38,9 @@ public class Inode {
 	}
 	
 	public Inode() {
-		// TODO Auto-generated constructor stub
+		this.blocks = new String[7];
 	}
-	
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-	
+		
 	public int getIdOwner() {
 		return idOwner;
 	}
@@ -123,11 +114,19 @@ public class Inode {
 		this.hide = hide;
 	}
 	
-	public int[] getBlocks() {
+	public String[] getBlocks() {
 		return blocks;
 	}
 
-	public void setBlocks(int[] blocks) {
+	public void setBlocks(String[] blocks) {
 		this.blocks = blocks;
+	}
+
+	public Inode getNextBlock() {
+		return nextBlock;
+	}
+
+	public void setNextBlock(Inode nextBlock) {
+		this.nextBlock = nextBlock;
 	}
 }

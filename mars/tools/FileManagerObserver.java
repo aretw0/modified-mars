@@ -28,8 +28,8 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
     private Font countFonts = new Font("Times", Font.BOLD,12);
     private Color backgroundColor = Color.WHITE;
     
-	private JSpinner blockAmount;
-	private JSpinner blockSize;
+	public static JSpinner blockAmount;
+	public static JSpinner blockSize;
 	private JProgressBar progressbar;
 	
 	private JTree treeFile;
