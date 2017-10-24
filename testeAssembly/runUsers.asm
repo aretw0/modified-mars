@@ -13,7 +13,9 @@ warnW: .asciiz "Falha na escrita\n"
 warnR: .asciiz "Falha na leitura\n"
 
 # Saida
-output: .asciiz ""
+output1: .asciiz "___________________________________________"
+output2: .asciiz "___________________________________________"
+output3: .asciiz "___________________________________________"
 # linefeed
 endl: .asciiz "\n"
 
@@ -59,65 +61,102 @@ Idle:
 	add $zero,$zero,$zero
 	j loop
 
-Programa1: # programa tenta escrever no arquivo1
-	opening(file11,9,warnO,rightOpen11,fim11)
+Programa1: # escreve no dir1/arquivo11.txt
+	opening(file11,9,warnO,rightOpen11,fimAll1)
 rightOpen11:
 	add $s0,$v0,$zero # salvando file description
 	prinThis(openOk)
-	writing(chunk1,11,warnW,rightWrite111,fim11)
+	writing(chunk1,11,warnW,rightWrite111,fimAll1)
 rightWrite111:
 	prinThis(writeOk)
-	writing(chunk2,11,warnW,rightWrite112,fim11)
+	writing(chunk2,11,warnW,rightWrite112,fimAll1)
 rightWrite112:
 	prinThis(writeOk)
-	writing(chunk3,11,warnW,rightWrite113,fim11)
+	writing(chunk3,11,warnW,rightWrite113,fimAll1)
 rightWrite113:
 	prinThis(writeOk)
-	writing(chunk4,11,warnW,rightWrite114,fim11)
+	writing(chunk4,11,warnW,rightWrite114,fimAll1)
 rightWrite114:
 	prinThis(writeOk)
-fim11:
 	closing(closeOk)
+	processTerminate
+	opening(file11,0,warnO,rightOpenR1,fimAll1)
+rightOpenR1:
+	add $s0,$v0,$zero # salvando file description
+	prinThis(openOk)
+	reading(output1,44,warnR,rightRead1,fimAll1)
+rightRead1:
+	prinThis(readOk)
+	prinThis(endl)
+	prinThis(output1)
+	prinThis(endl)
+fimAll1:
+	closing(closeOk)
+	processTerminate
 
-Programa2:
-	opening(file21,9,warnO,rightOpen21,fim21)
+Programa2: # escreve no dir2/arquivo21.txt
+	opening(file21,9,warnO,rightOpen21,fimAll2)
 rightOpen21:
 	add $s0,$v0,$zero # salvando file description
 	prinThis(openOk)
-	writing(chunk1,11,warnW,rightWrite211,fim21)
-	j fim21
+	writing(chunk1,11,warnW,rightWrite211,fimAll2)
 rightWrite211:
 	prinThis(writeOk)
-	writing(chunk2,11,warnW,rightWrite212,fim21)
+	writing(chunk2,11,warnW,rightWrite212,fimAll2)
 rightWrite212:
 	prinThis(writeOk)
-	writing(chunk3,11,warnW,rightWrite213,fim21)
+	writing(chunk3,11,warnW,rightWrite213,fimAll2)
 rightWrite213:
 	prinThis(writeOk)
-	writing(chunk4,11,warnW,rightWrite214,fim21)
+	writing(chunk4,11,warnW,rightWrite214,fimAll2)
 rightWrite214:
 	prinThis(writeOk)
-fim21:
 	closing(closeOk)
+	processTerminate
+	opening(file21,0,warnO,rightOpenR2,fimAll2)
+rightOpenR2:
+	add $s0,$v0,$zero # salvando file description
+	prinThis(openOk)
+	reading(output2,44,warnR,rightRead2,fimAll2)
+rightRead2:
+	prinThis(readOk)
+	prinThis(endl)
+	prinThis(output2)
+	prinThis(endl)
+fimAll2:
+	closing(closeOk)
+	processTerminate
 
-Programa3:
-	opening(file31,9,warnO,rightOpen31,fim31)
+Programa3: # escreve no dir3/arquivo31.txt
+	opening(file31,9,warnO,rightOpen31,fimAll3)
 rightOpen31:
 	add $s0,$v0,$zero # salvando file description
 	prinThis(openOk)
-	writing(chunk1,11,warnW,rightWrite311,fim31)
+	writing(chunk1,11,warnW,rightWrite311,fimAll3)
 rightWrite311:
 	prinThis(writeOk)
-	writing(chunk2,11,warnW,rightWrite312,fim31)
-	j fim31
+	writing(chunk2,11,warnW,rightWrite312,fimAll3)
 rightWrite312:
 	prinThis(writeOk)
-	writing(chunk3,11,warnW,rightWrite313,fim31)
+	writing(chunk3,11,warnW,rightWrite313,fimAll3)
 rightWrite313:
 	prinThis(writeOk)
-	writing(chunk4,11,warnW,rightWrite314,fim31)
+	writing(chunk4,11,warnW,rightWrite314,fimAll3)
 rightWrite314:
 	prinThis(writeOk)
-fim31:
 	closing(closeOk)
+	processTerminate
+	opening(file21,0,warnO,rightOpenR3,fimAll3)
+rightOpenR3:
+	add $s0,$v0,$zero # salvando file description
+	prinThis(openOk)
+	reading(output3,44,warnR,rightRead3,fimAll3)
+rightRead3:
+	prinThis(readOk)
+	prinThis(endl)
+	prinThis(output3)
+	prinThis(endl)
+fimAll3:
+	closing(closeOk)
+	processTerminate
 FimPrograma3:
