@@ -29,11 +29,30 @@ public class Fork extends AbstractSyscall {
 
 	@Override
 	public void simulate(ProgramStatement statement) throws ProcessingException {
+<<<<<<< HEAD
 		if (!hasLoad) {
 			FileSystem.loadInode();
 			FileSystem.loadFiles();	
 			hasLoad = true;	
 		}
+=======
+		/*if (!hasLoad) {
+			BufferedReader br;
+			try {
+//				br = new BufferedReader(new FileReader("arquivos.txt"));
+//			    String line = br.readLine();
+//
+//			    while (line != null) {
+//			    	String [] parans = line.split("#");
+//			    	FileSystem.getAllFiles().add(new File());
+//			        line = br.readLine();
+//			    }
+//			    br.close();
+			} catch (RuntimeException | IOException e){
+				e.printStackTrace();
+			}
+		}*/
+>>>>>>> master
 		List<Integer> temp = new ArrayList<Integer>();
 		for (int i = 0; i < RegisterFile.getRegisters().length;i++){
 			temp.add(RegisterFile.getValue(i));
