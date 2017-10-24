@@ -62,7 +62,7 @@ public class FileSystem {
 		
 	}
 	
-	public static void saveFiles() {
+	/*public static void saveFiles() {
 		FileWriter arq;
 		try {
 			arq = new FileWriter("arquivos.txt");
@@ -71,5 +71,5 @@ public class FileSystem {
 				if (file.getClass().isInstance(new File()))
 					save.print(file.toString());
 		}
-	}
+	}*/
 }

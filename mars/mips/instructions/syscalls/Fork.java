@@ -29,7 +29,7 @@ public class Fork extends AbstractSyscall {
 
 	@Override
 	public void simulate(ProgramStatement statement) throws ProcessingException {
-		if (!hasLoad) {
+		/*if (!hasLoad) {
 			BufferedReader br;
 			try {
 //				br = new BufferedReader(new FileReader("arquivos.txt"));
@@ -44,7 +44,7 @@ public class Fork extends AbstractSyscall {
 			} catch (RuntimeException | IOException e){
 				e.printStackTrace();
 			}
-		}
+		}*/
 		List<Integer> temp = new ArrayList<Integer>();
 		for (int i = 0; i < RegisterFile.getRegisters().length;i++){
 			temp.add(RegisterFile.getValue(i));
