@@ -4,6 +4,7 @@ public class File {
 
 	private String name; // nome do arquivo
 	private Inode inode;
+	private int descritor;
 
 	public File(Inode inode) {
 		super();
@@ -30,8 +31,16 @@ public class File {
 		this.name = name;
 	}
 	
+	public int getDescritor() {
+		return descritor;
+	}
+
+	public void setDescritor(int descritor) {
+		this.descritor = descritor;
+	}
+
 	@Override
 	public String toString() {
-		return name+"#"+FileSystem.getAllInodes().indexOf(inode);
+		return 1+"#"+name+"#"+FileSystem.getAllInodes().indexOf(inode);
 	}
 }

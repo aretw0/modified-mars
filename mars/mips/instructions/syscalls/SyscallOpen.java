@@ -3,6 +3,8 @@ package mars.mips.instructions.syscalls;
 import mars.util.*;
 import mars.mips.hardware.*;
 import mars.simulator.*;
+import mars.so.filemanager.Directory;
+import mars.so.filemanager.File;
 import mars.so.filemanager.FileSystem;
 import mars.so.filemanager.Spacer;
 import mars.*;
@@ -89,23 +91,31 @@ public class SyscallOpen extends AbstractSyscall {
 			throw new ProcessingException(statement, e);
 		}
 		// tudo acontece aqui
-		String newFilename = FileSystem.openFile(filename);
-		if (newFilename != null) {	
-			int retValue = SystemIO.openFile(newFilename, RegisterFile.getValue(5));
-			RegisterFile.updateRegister(2, retValue); // set returned fd value in register
+		String newName = "fileSystem/"+filename.split("/")[filename.split("/").length-1];
+		int retValue = SystemIO.openFile(newName, RegisterFile.getValue(5));
+		RegisterFile.updateRegister(2, retValue); // set returned fd value in register
 
-			// GETTING RID OF PROCESSING EXCEPTION. IT IS THE RESPONSIBILITY OF THE
-			// USER PROGRAM TO CHECK FOR BAD FILE OPEN. MARS SHOULD NOT PRE-EMPTIVELY
-			// TERMINATE MIPS EXECUTION BECAUSE OF IT. Thanks to UCLA student
-			// Duy Truong for pointing this out. DPS 28-July-2009.
+		// GETTING RID OF PROCESSING EXCEPTION. IT IS THE RESPONSIBILITY OF THE
+		// USER PROGRAM TO CHECK FOR BAD FILE OPEN. MARS SHOULD NOT PRE-EMPTIVELY
+		// TERMINATE MIPS EXECUTION BECAUSE OF IT. Thanks to UCLA student
+		// Duy Truong for pointing this out. DPS 28-July-2009.
 
-			if (retValue < 0) {
-				// some error in opening file
-				throw new ProcessingException(statement,
-						SystemIO.getFileErrorMessage() + " (syscall " + this.getNumber() + ")",
-						Exceptions.SYSCALL_EXCEPTION);
+		if (retValue < 0) {
+			// some error in opening file
+			throw new ProcessingException(statement,
+					SystemIO.getFileErrorMessage() + " (syscall " + this.getNumber() + ")",
+					Exceptions.SYSCALL_EXCEPTION);
+		}
+	
+		FileSystem.openFile(filename, RegisterFile.getValue(5), retValue);
+		for (File file : FileSystem.getAllFiles()) {
+			if (file instanceof Directory) {
+				System.out.println(((Directory)file).toString());
+				System.out.println(file.getClass());
+			}else {
+				System.out.println(((File)file).toString());
+				System.out.println(file.getClass());
 			}
 		}
-
 	}
 }

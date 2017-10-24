@@ -6,10 +6,11 @@ import java.util.List;
 public class Directory extends File{
 	
 	private int mySelf;
-	private int myFather;
-	private List<File> files;
+	private File myFather;
+	private static List<String> dirIndex;
+	private static List<File> files;
 
-	public Directory(int mySelf, int myFather, Inode inode, List<File> files,
+	public Directory(int mySelf, File myFather, Inode inode, List<File> files,
 			int[] idNodes) {
 		super();
 		this.mySelf = mySelf;
@@ -19,6 +20,7 @@ public class Directory extends File{
 
 	public Directory() {
 		files = new ArrayList<File>();
+		dirIndex = new ArrayList<String>();
 	}
 
 	public List<File> getFiles() {
@@ -37,13 +39,35 @@ public class Directory extends File{
 		this.mySelf = mySelf;
 	}
 
-	public int getMyFather() {
+	public File getMyFather() {
 		return myFather;
 	}
 
-	public void setMyFather(int myFather) {
+	public void setMyFather(File myFather) {
 		this.myFather = myFather;
 	}
 
+	public List<String> getDirIndex() {
+		return dirIndex;
+	}
+
+	public void setDirIndex(List<String> dirIndex) {
+		this.dirIndex = dirIndex;
+	}
+
+	@Override
+	public String toString() {
+		String str = 0+"#"+getName();
+		for (File file : files) {
+			str += "#"+FileSystem.getAllFiles().indexOf(file);
+		}
+		return str;
+	}
+	
+	public static void loadDir() {
+		for (String st : dirIndex) {
+			files.add(FileSystem.getAllFiles().get(Integer.valueOf(st)));
+		}
+	}
 
 }

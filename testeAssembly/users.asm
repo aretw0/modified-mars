@@ -17,6 +17,7 @@ warnR: .asciiz "Falha na leitura\n"
 
 .text
 
+
 openFile(file1, 1, 0)
 bge $v0,0, rightOpen # se for negativo deu falha
 prinThis(warnO)

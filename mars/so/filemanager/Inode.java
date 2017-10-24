@@ -7,14 +7,13 @@ public class Inode {
 	
 	private int idOwner; // id do dono
 	private List<FileProtection> rules;
-//	private byte[] byteSize;  // qual tipo de dado, ver ainda
 	private int byteSize; 
 	private int blockSize;
 	private String dateBirth; // data de criação
 	private String dateChange; // data de modificação
 	private Boolean hide; // flag para ocultar o arquivo
 
-	private String [] blocks;
+	private int [] blocks;
 	private Inode nextBlock;
 
 	/* Os 7 primeiros endereços correspondem aos endereços do disco
@@ -25,7 +24,7 @@ public class Inode {
 	
 	public Inode(String name, int idOwner, List<FileProtection> rules,
 			int byteSize, int blockSize, String dateBirth, String dateChange,
-			Boolean hide, String [] blocks) {
+			Boolean hide, int [] blocks) {
 		super();
 		this.idOwner = idOwner;
 		this.rules = rules;
@@ -38,7 +37,7 @@ public class Inode {
 	}
 	
 	public Inode() {
-		this.blocks = new String[7];
+		this.blocks = new int[8];
 	}
 		
 	public int getIdOwner() {
@@ -114,11 +113,11 @@ public class Inode {
 		this.hide = hide;
 	}
 	
-	public String[] getBlocks() {
+	public int[] getBlocks() {
 		return blocks;
 	}
 
-	public void setBlocks(String[] blocks) {
+	public void setBlocks(int[] blocks) {
 		this.blocks = blocks;
 	}
 
@@ -128,5 +127,17 @@ public class Inode {
 
 	public void setNextBlock(Inode nextBlock) {
 		this.nextBlock = nextBlock;
+	}
+	
+	@Override
+	public String toString() {
+		String rt = idOwner+"#"+byteSize+"#"+blockSize+"#"+dateBirth+"#"+dateChange;
+		Inode blocoAtual = this;
+		while (blocoAtual !=  null) {
+			for (int i = 0; i < blocoAtual.getBlocks().length; i++)
+				rt += "#"+blocoAtual.getBlocks()[i];
+			blocoAtual = blocoAtual.getNextBlock();
+		}
+		return rt;		
 	}
 }
