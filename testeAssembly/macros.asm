@@ -70,3 +70,30 @@
 	li $v0,20
 	syscall
 .end_macro
+
+.macro writing(%buffer,%max,%msg,%js,%jf)
+    writeFile(%buffer,%max)
+    bge $v0,0, %js # se for negativo deu falha
+    prinThis(%msg)
+    j %jf
+.end_macro
+
+.macro reading(%output,%max,%msg,%js,%jf)
+    readFile(%output,%max)
+    bge $v0,0, %js # se for negativo deu falha
+    prinThis(%msg)
+    j %jf
+.end_macro
+
+.macro opening(%file,%flag,%msg,%js,%jf)
+    openFile(%file,%flag, 0)
+    bge $v0,0, %js # se for negativo deu falha
+    prinThis(%msg)
+    j %jf
+.end_macro
+
+.macro closing(%msg)
+    closeFile
+    prinThis(%msg)
+    processTerminate
+.end_macro
