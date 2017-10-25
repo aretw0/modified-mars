@@ -58,7 +58,7 @@ public class FileSystem {
 		FileManagerObserver.m_taLog.setText(FileManagerObserver.m_taLog.getText() + "Tentando abrir arquivo: " + filename+"\n");
 		filename = ProcessTable.getExeProc().getPidProc()+"/"+filename;		
 		String [] files = filename.split("/");
-<<<<<<< HEAD
+		
 		int indexOrigi = 0;
 		Directory dir = ((Directory)FileSystem.getAllFiles().get(indexOrigi)).clone();
 		for (String path : files) {
@@ -108,35 +108,7 @@ public class FileSystem {
 						// se mode de escrita o arquivo deve exixtir
 						return null;
 					}
-=======
-		File dir = FileSystem.getAllFiles().get(0);
-		System.out.println("File : " + filename);
-		for (String st : files) {
-			boolean exist = false;
-			System.out.println(" Dir : " + dir.toString());
-			if (dir instanceof  Directory) {
-				System.out.println("dir � instance of directory");
-				for (File file : ((Directory)dir).getFiles()) {
-					if (file.getName().equals(st)) {
-						//diret�rio existe
-						dir = file;
-						exist = true;
-						break;
-					}
-				}
-				if (!exist) {
-					//diretorio n�o existe, criar um novo
-					Directory file = new Directory();
-					file.setName(st);
-					file.setMyFather(dir);
-					FileSystem.getAllFiles().add(file);
-					dir = file;
-				}
-			}else {
-				//dir n�o � um diretorio
-				if (st.equals(dir.getName())) {
-					
->>>>>>> master
+
 				}
 			}
 		}
@@ -245,7 +217,6 @@ public class FileSystem {
 			e.printStackTrace();
 		}
 	}
-<<<<<<< HEAD
 	
 	public static Directory getDir(String path, Directory dir) {
 		for (File file : ((Directory)dir).getFiles()) {
@@ -264,6 +235,4 @@ public class FileSystem {
 		}
 		return null;
 	}
-=======
->>>>>>> master
 }
