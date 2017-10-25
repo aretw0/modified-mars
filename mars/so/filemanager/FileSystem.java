@@ -90,7 +90,8 @@ public class FileSystem {
 				File aux = getFile(path, (Directory)FileSystem.getAllFiles().get(indexOrigi));
 				if (aux != null) {
 					FileManagerObserver.m_taLog.setText(FileManagerObserver.m_taLog.getText() + "Arquivo " + path + " existe, abrindo...\n");
-					//arquivo existe, retorna o arqvuivo				
+					//arquivo existe, retorna o arqvuivo
+					aux.setPath(homeDir+filename.replace("/", "-"));
 					return aux;
 				}else{
 					// arquivo não existe
@@ -208,7 +209,7 @@ public class FileSystem {
 		    	
 		    }
 		    for (File file : FileSystem.getAllFiles()) {
-		    	if (file instanceof Directory) {
+		    	if (file instanceof Directory && !file.getName().contains(".")) {
 		    		((Directory)file).loadDir();
 		    	}
 		    }

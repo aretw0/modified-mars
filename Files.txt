@@ -3,4 +3,4 @@
 0#a#3
 0#b#4
 0#c#5
-1#arquivo2.txt#-1
+0#arquivo2.txt
