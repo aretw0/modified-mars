@@ -79,7 +79,6 @@ rightWrite113:
 rightWrite114:
 	prinThis(writeOk)
 	closing(closeOk)
-	processTerminate
 	opening(file11,0,warnO,rightOpenR1,fimAll1)
 rightOpenR1:
 	add $s0,$v0,$zero # salvando file description
@@ -112,7 +111,6 @@ rightWrite213:
 rightWrite214:
 	prinThis(writeOk)
 	closing(closeOk)
-	processTerminate
 	opening(file21,0,warnO,rightOpenR2,fimAll2)
 rightOpenR2:
 	add $s0,$v0,$zero # salvando file description
@@ -145,8 +143,7 @@ rightWrite313:
 rightWrite314:
 	prinThis(writeOk)
 	closing(closeOk)
-	processTerminate
-	opening(file21,0,warnO,rightOpenR3,fimAll3)
+	opening(file31,0,warnO,rightOpenR3,fimAll3)
 rightOpenR3:
 	add $s0,$v0,$zero # salvando file description
 	prinThis(openOk)

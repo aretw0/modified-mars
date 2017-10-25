@@ -47,7 +47,7 @@
 
 #macro para fork
 .macro fork (%val1, %val, %val2, %val3, %val4) 
-	#parâmetros referenciados %val
+	#parï¿½metros referenciados %val
 	li $v0,18	
 	la $a0, %val1
 	la $a1, %val
@@ -95,5 +95,4 @@
 .macro closing(%msg)
     closeFile
     prinThis(%msg)
-    processTerminate
 .end_macro
