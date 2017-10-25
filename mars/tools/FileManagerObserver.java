@@ -35,7 +35,7 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
 	private JTree treeFile;
 	
 	/** text field for log output */
-	private JTextArea m_taLog;
+	public static JTextArea m_taLog;
 	
 	
 	// Values for Combo Boxes
@@ -136,7 +136,6 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
 
 
 		treeFile = new JTree();
-		
    		BorderLayout layout = new BorderLayout();
    		layout.setVgap(10);
    		layout.setHgap(10);

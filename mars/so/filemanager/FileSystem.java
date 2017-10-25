@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mars.so.processmanager.ProcessTable;
+import mars.tools.FileManagerObserver;
 
 public class FileSystem {
 	
@@ -53,103 +54,81 @@ public class FileSystem {
 		FileSystem.allInodes = allInodes;
 	}
 	
-	public static String openFile(String filename, int mode, int descritor) {	
-		filename = ProcessTable.getExeProc().getPidProc()+"/"+filename;
+	public static File openFile(String filename, int mode) {
+		FileManagerObserver.m_taLog.setText(FileManagerObserver.m_taLog.getText() + "Tentando abrir arquivo: " + filename+"\n");
+		filename = ProcessTable.getExeProc().getPidProc()+"/"+filename;		
 		String [] files = filename.split("/");
-		File dir = FileSystem.getAllFiles().get(0);
-		System.out.println("File : " + filename);
-		for (String st : files) {
-			boolean exist = false;
-			System.out.println(" Dir : " + dir.toString());
-			if (dir instanceof  Directory) {
-				System.out.println("dir é instance of directory");
-				for (File file : ((Directory)dir).getFiles()) {
-					if (file.getName().equals(st)) {
-						//diretório existe
-						dir = file;
-						exist = true;
-						break;
+		int indexOrigi = 0;
+		Directory dir = ((Directory)FileSystem.getAllFiles().get(indexOrigi)).clone();
+		for (String path : files) {
+			if (!path.contains(".")) { 
+				// é diretorio
+				Directory aux = getDir(path, (Directory)FileSystem.getAllFiles().get(indexOrigi));
+				if (aux != null) {
+					//diretorio existe
+					FileManagerObserver.m_taLog.setText(FileManagerObserver.m_taLog.getText() + "Diretório " + path + "/ existe, abrindo.. \n");
+					indexOrigi = FileSystem.getAllFiles().indexOf(aux);
+					dir = aux;
+				}else {
+					// diretorio não existe
+					FileManagerObserver.m_taLog.setText(FileManagerObserver.m_taLog.getText() + "Diretório " + path + "/ não existe, criando diretório..\n");
+					if (mode == 1 || mode == 9) {
+						// se modo de escrita: criar novo dir												
+						aux = new Directory(path, dir);
+						((Directory)FileSystem.getAllFiles().get(indexOrigi)).add(aux);
+						FileManagerObserver.m_taLog.setText(FileManagerObserver.m_taLog.getText() + aux.getName() + "/ criado\n");
+						indexOrigi = FileSystem.getAllFiles().indexOf(aux);
+						dir = aux;
+					}else {
+						// se mode de escrita o dir deve exixtir
+						return null;
 					}
 				}
-				if (!exist) {
-					//diretorio não existe, criar um novo
-					Directory file = new Directory();
-					file.setName(st);
-					file.setMyFather(dir);
-					FileSystem.getAllFiles().add(file);
-					dir = file;
-				}
 			}else {
-				//dir não é um diretorio
-				if (st.equals(dir.getName())) {
-					
+				// é arquivo
+				File aux = getFile(path, (Directory)FileSystem.getAllFiles().get(indexOrigi));
+				if (aux != null) {
+					FileManagerObserver.m_taLog.setText(FileManagerObserver.m_taLog.getText() + "Arquivo " + path + " existe, abrindo...\n");
+					//arquivo existe, retorna o arqvuivo				
+					return aux;
+				}else{
+					// arquivo não existe
+					FileManagerObserver.m_taLog.setText(FileManagerObserver.m_taLog.getText() + "Arquivo " +path + " não existe, criando...\n");
+					aux = new File();
+					if (mode == 1 || mode == 9) {
+						// se mode de leitura, cria o arquivo e seta o path
+						aux.setName(path);
+						aux.setPath(homeDir+filename.replace("/", "-"));
+						((Directory)FileSystem.getAllFiles().get(indexOrigi)).add(aux);
+						FileManagerObserver.m_taLog.setText(FileManagerObserver.m_taLog.getText() + aux.getName() + " criado com caminho = " +
+						" " +aux.getPath().replaceAll("-", "/") + "\n");
+						return aux;
+					}else {
+						// se mode de escrita o arquivo deve exixtir
+						return null;
+					}
 				}
 			}
 		}
-		
-		
-//		if (mode == 1 || mode == 9) {
-//			filename = ProcessTable.getExeProc().getPidProc()+"/"+filename;
-//			String [] files = filename.split("/");
-//			File dir = FileSystem.getAllFiles().get(0);
-//			for (String st : files) {
-//				if (dir instanceof  Directory) {
-//					for (File file : ((Directory)dir).getFiles()) {
-//						if (file.getName().equals(st)) {
-//							dir = file;
-//							break;
-//						}						
-//					}
-//					File file = new Directory();
-//					((Directory)file).setName(st);
-//					((Directory)file).setMyFather(dir);
-//					((Directory)dir).getFiles().add(file);
-//					dir = file;
-//					FileSystem.getAllFiles().add(file);					
-//					
-//				}else {
-//					boolean exist = false;
-//					for (File file : ((Directory)dir).getFiles()) {
-//						if (file.getName().equals(st)) {
-//							dir = file;
-//							exist = true;
-//							break;
-//						}						
-//					}
-//					if (exist) {
-//						
-//					}else {
-//						File file = new File();
-//						((File)file).setName(st);
-//						((File)file).setDescritor(descritor);
-//						((Directory)dir).getFiles().add(file);
-//						FileSystem.getAllFiles().add(file);						
-//					}
-//				}
-//					
-//					
-//			}
-//			return null;			
-//			
-//		}
 		return null;
 	}
 	
-	/*public static void saveFiles() {
+	public static void saveFiles() {
 		FileWriter arq;
 		try {
 			arq = new FileWriter("Files.txt");
 			PrintWriter save = new PrintWriter(arq);
 			for (File file : FileSystem.getAllFiles()) {
-				if (!file.getClass().isInstance(new Directory()))
+				if (!(file instanceof Directory))
 					save.println(file.toString());
 				else {
 					save.println(((Directory)file).toString());
 				}
 			}
+			arq.close();
 		}catch (Exception e) {
 			e.printStackTrace();
-		}
+		}		
 	}
 	public static void saveInode() {
 		FileWriter arq;
@@ -159,6 +138,7 @@ public class FileSystem {
 			for (Inode inode : FileSystem.getAllInodes()) {
 				save.println(inode.toString());
 			}
+			arq.close();
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -217,8 +197,7 @@ public class FileSystem {
 		    		 FileSystem.getAllFiles().add(file);
 		    	}
 		    	else {
-		    		file = new Directory();
-		    		file.setName(parans[1]);
+		    		file = new Directory(parans[1]);
 		    		for (int i = 2; i < parans.length;i++)
 		    			((Directory)file).getDirIndex().add(parans[i]);
 		    		FileSystem.getAllFiles().add(file);
@@ -227,7 +206,7 @@ public class FileSystem {
 		    	
 		    }
 		    for (File file : FileSystem.getAllFiles()) {
-		    	if (file.getClass().isInstance(new Directory())) {
+		    	if (file instanceof Directory) {
 		    		((Directory)file).loadDir();
 		    	}
 		    }
@@ -235,5 +214,23 @@ public class FileSystem {
 		} catch (RuntimeException | IOException e){
 			e.printStackTrace();
 		}
-	}*/
+	}
+	
+	public static Directory getDir(String path, Directory dir) {
+		for (File file : ((Directory)dir).getFiles()) {
+			if (file.getName().equals(path)) {
+				return ((Directory)file);
+			}
+		}
+		return null;
+	}
+	
+	public static File getFile(String path, Directory dir) {
+		for (File file : ((Directory)dir).getFiles()) {
+			if (file.getName().equals(path)) {
+				return file;
+			}
+		}
+		return null;
+	}
 }
