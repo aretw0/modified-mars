@@ -105,7 +105,7 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
 	 * 
 	 * */
    	
-      private final String[] wordsPerUnitChoices  = {"1","2","4","8","16","32","64","128","256","512","1024","2048"};
+      private final String[] wordsPerUnitChoices  = {"2","4","8","16","32","64","128","256","512","1024","2048"};
       private final int defaultWordsPerUnitIndex  = 0;
       private final String[] blockSizing  = {"128","512","2048","8192"};
       private final int defaultBlockSizing = 2;
@@ -188,9 +188,8 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
    		layout.setVgap(10);
    		layout.setHgap(10);
    		panel.setLayout(layout);
-   	
    		panel.add(buildConfigPanel(), BorderLayout.NORTH);
-   		panel.add(new JScrollPane(buildInfoPanel()), BorderLayout.WEST);
+   		panel.add(buildInfoPanel(), BorderLayout.WEST);
 		panel.add(new JScrollPane(buildLogPanel()), BorderLayout.CENTER);
 //		panel.add(buildVisualizationArea(), BorderLayout.CENTER);
    		
@@ -198,7 +197,11 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
    		return panel;
 	}
 	private JPanel buildInfoPanel() {		
-		return treePanel = new DynamicTree();
+		return treePanel = new DynamicTree() {
+			public Dimension getPreferredSize() {
+   				return new Dimension(325,500)	;
+   			}
+		};
 	}
 	private JPanel buildConfigPanel() {
 		JPanel panel = new JPanel();
@@ -241,7 +244,7 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
 							default:
 								break;
 	                     }
-	                     theGrid = createNewGrid();
+//	                     theGrid = createNewGrid();
 	                     updateDisplay();
 	                  }
 	               });
