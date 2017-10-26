@@ -1,10 +1,13 @@
 package mars.so.filemanager;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+
 public class File implements Cloneable {
 
 	private String name; // nome do arquivo
 	private Inode inode;
 	private String path;
+	private DefaultMutableTreeNode treeNode;
 	private int descritor;
 
 	public File(Inode inode) {
@@ -46,6 +49,14 @@ public class File implements Cloneable {
 
 	public void setPath(String path) {
 		this.path = path;
+	}
+
+	public DefaultMutableTreeNode getTreeNode() {
+		return treeNode;
+	}
+
+	public void setTreeNode(DefaultMutableTreeNode treeNode) {
+		this.treeNode = treeNode;
 	}
 
 	@Override

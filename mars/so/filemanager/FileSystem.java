@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+
 import mars.so.processmanager.ProcessTable;
 import mars.tools.FileManagerObserver;
 
@@ -89,7 +92,8 @@ public class FileSystem {
 						aux = new Directory(path, dir);
 						((Directory)FileSystem.getAllFiles().get(indexOrigi)).add(aux);
 						FileManagerObserver.m_taLog.setText(FileManagerObserver.m_taLog.getText() + aux.getName() + "/ criado\n");
-						indexOrigi = FileSystem.getAllFiles().indexOf(aux);
+						aux.setTreeNode(FileManagerObserver.treePanel.addObject(((Directory)FileSystem.getAllFiles().get(indexOrigi)).getTreeNode(), aux.getName()));
+						indexOrigi = FileSystem.getAllFiles().indexOf(aux);						
 						dir = aux;
 					}else {
 						// se mode de escrita o dir deve exixtir
@@ -123,6 +127,7 @@ public class FileSystem {
 						((Directory)FileSystem.getAllFiles().get(indexOrigi)).add(aux);
 						FileManagerObserver.m_taLog.setText(FileManagerObserver.m_taLog.getText() + aux.getName() + " criado com caminho = " +
 						" " +aux.getPath().replaceAll("-", "/") + "\n");
+						FileManagerObserver.treePanel.addObject(dir.getTreeNode(), aux.getName());											
 						return aux;
 					}else {
 						// se mode de escrita o arquivo deve exixtir
@@ -223,6 +228,9 @@ public class FileSystem {
 		    		for (int i = 2; i < parans.length;i++)
 		    			((Directory)file).getDirIndex().add(parans[i]);
 		    		FileSystem.getAllFiles().add(file);
+		    		if (file.getName().equals("fileSystem")) {		    			
+			    		file.setTreeNode(FileManagerObserver.treePanel.addObject(file.getName()));
+		    		}
 		    	}
 		    	line = br.readLine();
 		    	

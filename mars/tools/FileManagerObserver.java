@@ -40,7 +40,9 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
 	public static int blockUse = 0; // para definir progressbar
 	
 	public static DynamicTree treePanel;
-	public static DefaultMutableTreeNode rootNode,p1,p2,p3;
+	public static DefaultTreeModel treeModel;
+	public static DefaultMutableTreeNode rootNode;
+	public static java.util.List<DefaultMutableTreeNode> dir;
 	
 	/** text field for log output */
 	public static JTextArea m_taLog;
@@ -529,16 +531,16 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
        }
     }
      public class DynamicTree extends JPanel {
-    	    protected DefaultTreeModel treeModel;
+    	    
     	    protected JTree tree;
     	    private Toolkit toolkit = Toolkit.getDefaultToolkit();
     	 
     	    public DynamicTree() {
     	        super(new GridLayout(1,0));
-    	         
-    	        rootNode = new DefaultMutableTreeNode("Root");
+    	            
+    	        rootNode = new DefaultMutableTreeNode("Mars"); 
     	        treeModel = new DefaultTreeModel(rootNode);
-    	    treeModel.addTreeModelListener(new MyTreeModelListener());
+    	        treeModel.addTreeModelListener(new MyTreeModelListener());
     	        tree = new JTree(treeModel);
     	        tree.setEditable(false);
     	        tree.getSelectionModel().setSelectionMode

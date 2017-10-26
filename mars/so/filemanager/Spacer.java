@@ -38,7 +38,7 @@ public class Spacer { // nosso gerenciador de espaço livre
 				break;
 		}
 		for (int i = 0; i < Math.ceil(lenght/SuperBlock.getSizeBlock()); i++, j++) {				
-			aux.getBlocks()[k] = 1;
+			aux.getBlocks()[k] = j;
 			k++;
 			blocks[j] = 1;
 			if (k>7) {

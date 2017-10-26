@@ -3,6 +3,8 @@ package mars.so.filemanager;
 import java.util.ArrayList;
 import java.util.List;
 
+import mars.tools.FileManagerObserver;
+
 public class Directory extends File{
 	
 	private int mySelf;
@@ -74,7 +76,9 @@ public class Directory extends File{
 	
 	public void loadDir() {
 		for (String st : dirIndex) {
-			files.add(FileSystem.getAllFiles().get(Integer.valueOf(st)));
+			Directory dir = (Directory) FileSystem.getAllFiles().get(Integer.valueOf(st));
+			files.add(dir);
+			dir.setTreeNode(FileManagerObserver.treePanel.addObject(getTreeNode(), dir.getName()));
 		}
 	}
 	
