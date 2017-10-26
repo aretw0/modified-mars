@@ -39,7 +39,8 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
 	public static JProgressBar progressbar;
 	public static int blockUse = 0; // para definir progressbar
 	
-	private DynamicTree treePanel;
+	public static DynamicTree treePanel;
+	public static DefaultMutableTreeNode rootNode,p1,p2,p3;
 	
 	/** text field for log output */
 	public static JTextArea m_taLog;
@@ -269,12 +270,6 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
 		return panel;
 	}
 	
-/*	private JPanel buildSelectPanel() {
-		JPanel selectPanel = new JPanel();
-		
-		return selectPanel;
-	}*/
-	
 	protected void initializePreGUI() {
         counterColorScale = new CounterColorScale(defaultCounterColors);
      	// NOTE: Can't call "createNewGrid()" here because it uses settings from
@@ -310,7 +305,16 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
 		if (notice.getAccessType() != AccessNotice.READ) return;
 		MemoryAccessNotice m = (MemoryAccessNotice) notice;
 		int a = m.getAddress();
+/*
+ * 		Exemplo de como se adiciona a JTree
+		p1 = treePanel.addObject(rootNode,"p1");
+		p2 = treePanel.addObject(rootNode,"p2");
+		p3 = treePanel.addObject(rootNode,"p3");
+		treePanel.addObject(p1,"Dir1");
+		treePanel.addObject(p1,"Dir2");
+		treePanel.addObject(p1,"Dir3");*/
 		if (a == lastAdress) return;
+		
 		
 		/*
 		 * Precisamos mostrar informações referentes
@@ -524,7 +528,6 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
        }
     }
      public class DynamicTree extends JPanel {
-    	    protected DefaultMutableTreeNode rootNode;
     	    protected DefaultTreeModel treeModel;
     	    protected JTree tree;
     	    private Toolkit toolkit = Toolkit.getDefaultToolkit();
@@ -532,7 +535,7 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
     	    public DynamicTree() {
     	        super(new GridLayout(1,0));
     	         
-    	        rootNode = new DefaultMutableTreeNode("Root Node");
+    	        rootNode = new DefaultMutableTreeNode("Root");
     	        treeModel = new DefaultTreeModel(rootNode);
     	    treeModel.addTreeModelListener(new MyTreeModelListener());
     	        tree = new JTree(treeModel);
