@@ -66,22 +66,8 @@ Programa1: # escreve no dir1/arquivo11.txt
 rightOpen11:
 	add $s0,$v0,$zero # salvando file description
 	prinThis(openOk)
-<<<<<<< Updated upstream
 	writing(body1,44,warnW,rightWrite11,fimAll1)
 rightWrite11:
-=======
-	writing(body1,44,warnW,rightWrite114,fimAll1)
-rightWrite111:
-	prinThis(writeOk)
-	writing(chunk21,11,warnW,rightWrite112,fimAll1)
-rightWrite112:
-	prinThis(writeOk)
-	writing(chunk31,11,warnW,rightWrite113,fimAll1)
-rightWrite113:
-	prinThis(writeOk)
-	writing(chunk41,11,warnW,rightWrite114,fimAll1)
-rightWrite114:
->>>>>>> Stashed changes
 	prinThis(writeOk)
 	closing(closeOk)
 	opening(file11,0,warnO,rightOpenR1,fimAll1)
