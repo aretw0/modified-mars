@@ -7,8 +7,8 @@ public class Directory extends File{
 	
 	private int mySelf;
 	private File myFather;
-	private static List<String> dirIndex;
-	private static List<File> files;
+	private List<String> dirIndex;
+	private List<File> files;
 
 	public Directory(int mySelf, File myFather, Inode inode, List<File> files,
 			int[] idNodes) {
@@ -18,7 +18,15 @@ public class Directory extends File{
 		this.files = files;
 	}
 
-	public Directory() {
+	public Directory(String name) {
+		setName(name);
+		files = new ArrayList<File>();
+		dirIndex = new ArrayList<String>();
+	}
+	
+	public Directory(String name, Directory father) {
+		setName(name);
+		this.myFather = father;
 		files = new ArrayList<File>();
 		dirIndex = new ArrayList<String>();
 	}
@@ -58,16 +66,25 @@ public class Directory extends File{
 	@Override
 	public String toString() {
 		String str = 0+"#"+getName();
-		for (File file : files) {
+		for (File file : getFiles()) {
 			str += "#"+FileSystem.getAllFiles().indexOf(file);
 		}
 		return str;
 	}
 	
-	public static void loadDir() {
+	public void loadDir() {
 		for (String st : dirIndex) {
 			files.add(FileSystem.getAllFiles().get(Integer.valueOf(st)));
 		}
+	}
+	
+	public boolean add(File file) {
+		getFiles().add(file);
+		return FileSystem.getAllFiles().add(file);
+	}
+	
+	public Directory clone() {
+		return (Directory) super.clone();
 	}
 
 }

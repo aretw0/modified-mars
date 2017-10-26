@@ -2,7 +2,7 @@
 .include "macros.asm"
 
 .data
-file1: .asciiz "a/b/arquivo2.txt" #com diretorio, precisa existir
+file1: .asciiz "a/b/c/arquivo2.txt" #com diretorio, precisa existir
 #file1: .asciiz "arquivo1.txt" # sem diretório escreve na raiz do projeto
 body1: .asciiz "The quick brown fox jumps over the lazy dog" # tem 44 caracteres
 file2: .asciiz "arquivo2.txt"

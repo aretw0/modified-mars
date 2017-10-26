@@ -1,9 +1,10 @@
 package mars.so.filemanager;
 
-public class File {
+public class File implements Cloneable {
 
 	private String name; // nome do arquivo
 	private Inode inode;
+	private String path;
 	private int descritor;
 
 	public File(Inode inode) {
@@ -39,8 +40,26 @@ public class File {
 		this.descritor = descritor;
 	}
 
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
 	@Override
 	public String toString() {
 		return 1+"#"+name+"#"+FileSystem.getAllInodes().indexOf(inode);
+	}
+	
+	public File clone() {
+		try {
+			return (File) super.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		return null;
 	}
 }
