@@ -189,8 +189,8 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
    	
    		panel.add(buildConfigPanel(), BorderLayout.NORTH);
    		panel.add(new JScrollPane(buildInfoPanel()), BorderLayout.WEST);
-		panel.add(buildLogPanel(), BorderLayout.SOUTH);
-		panel.add(buildVisualizationArea(), BorderLayout.CENTER);
+		panel.add(new JScrollPane(buildLogPanel()), BorderLayout.CENTER);
+//		panel.add(buildVisualizationArea(), BorderLayout.CENTER);
    		
    		
    		return panel;
@@ -288,7 +288,7 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
         updateDisplay();
      }
        protected void updateDisplay() {
-        canvas.repaint();
+//        canvas.repaint();
         progressbar.setValue(blockUse);
         progressbar.setMaximum(getIntComboBoxSelection(blockAmount));
      }
