@@ -20,9 +20,9 @@ output3: .space 1024
 endl: .asciiz "\n"
 
 # Definição de arquivos
-file11: .asciiz "dir1/arquivo11.txt" #dir principal
-file21: .asciiz "dir2/arquivo21.txt" 
-file31: .asciiz "dir3/arquivo31.txt"
+file11: .asciiz "fileSystem/dir1/arquivo11.txt" #dir principal
+file21: .asciiz "fileSystem/dir2/arquivo21.txt" 
+file31: .asciiz "fileSystem/dir3/arquivo31.txt"
 
 file12: .asciiz "dir1/dir11/arquivo12.txt" #dir interno ao principal
 file22: .asciiz "dir2/dir21/arquivo22.txt"
