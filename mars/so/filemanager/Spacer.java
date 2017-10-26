@@ -11,7 +11,7 @@ public class Spacer { // nosso gerenciador de espaço livre
 	private int [] blocks;
 
 	public Spacer() { 
-		setBlocks(new int[(int) FileManagerObserver.blockAmount.getValue()]);
+		setBlocks(new int[FileManagerObserver.getIntComboBoxSelection(FileManagerObserver.blockAmount)]);
 	}
 
 	public static boolean isInit() {

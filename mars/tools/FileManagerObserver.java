@@ -6,6 +6,8 @@ import mars.mips.hardware.MemoryAccessNotice;
 
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -28,8 +30,8 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
     private Font countFonts = new Font("Times", Font.BOLD,12);
     private Color backgroundColor = Color.WHITE;
     
-	public static JSpinner blockAmount;
-	public static JSpinner blockSize;
+	public static JComboBox blockAmount;
+	public static JComboBox blockSize;
 	private JProgressBar progressbar;
 	
 	private JTree treeFile;
@@ -44,36 +46,38 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
 	 * 
 	 * Ia tentar usar os controles dela que são com combobox
 	 * 
-	 * COM UNIT 16X16
-	 * 
-	 * DISPLAY 256*256
-	 * 1024 BLOCOS
-	 * 
+	 * COM UNIT 32X32
 	 * DIPLAY 512*512
+	 * 16*16 = 256 BLOCOS
 	 * 
-	 * 4096 BLOCOS
+	 * COM UNIT 16X16
+	 * DIPLAY 512*512
+	 * 32*32 = 1024 BLOCOS
+	 * 
+	 * COM UNIT 8X8
+	 * DIPLAY 512*512
+	 * 64*64 = 4096 BLOCOS
+	 * 
 	 * 
 	 * */
    	
       private final String[] wordsPerUnitChoices  = {"1","2","4","8","16","32","64","128","256","512","1024","2048"};
       private final int defaultWordsPerUnitIndex  = 0;
-      private final String[] visualizationUnitPixelWidthChoices  = {"1","2","4","8","16","32"};
-      private final int defaultVisualizationUnitPixelWidthIndex  = 4;
-      private final String[] visualizationUnitPixelHeightChoices  = {"1","2","4","8","16","32"};
-      private final int defaultVisualizationUnitPixelHeightIndex  = 4;
-      private final String[] displayAreaPixelWidthChoices  = {"64","128","256","512","1024"};
-      private final int defaultDisplayWidthIndex  = 3;
-      private final String[] displayAreaPixelHeightChoices  = {"64","128","256","512","1024"};
-      private final int defaultDisplayHeightIndex  = 3;
+      private final String[] blockSizing  = {"256","1024","4096"};
+      private final int defaultBlockSizing = 0;
+      private final String[] visualizationUnitPixelChoices  = {"1","2","4","8","16","32"};
+      private final int defaultVisualizationUnitPixelIndex  = 5;
+      private final String[] displayAreaPixelChoices  = {"64","128","256","512","1024"};
+      private final int defaultDisplayIndex  = 3;
       private final boolean defaultDrawHashMarks = true;
    
       // Values for display canvas.  Note their initialization uses the identifiers just above.
    
-      private int unitPixelWidth = Integer.parseInt(visualizationUnitPixelWidthChoices[defaultVisualizationUnitPixelWidthIndex]);
-      private int unitPixelHeight = Integer.parseInt(visualizationUnitPixelHeightChoices[defaultVisualizationUnitPixelHeightIndex]);
+      private int unitPixelWidth = Integer.parseInt(visualizationUnitPixelChoices[defaultVisualizationUnitPixelIndex]);
+      private int unitPixelHeight = Integer.parseInt(visualizationUnitPixelChoices[defaultVisualizationUnitPixelIndex]);
       private int wordsPerUnit = Integer.parseInt(wordsPerUnitChoices[defaultWordsPerUnitIndex]);
-      private int visualizationAreaWidthInPixels = Integer.parseInt(displayAreaPixelWidthChoices[defaultDisplayWidthIndex]);
-      private int visualizationAreaHeightInPixels = Integer.parseInt(displayAreaPixelHeightChoices[defaultDisplayHeightIndex]);
+      private int visualizationAreaWidthInPixels = Integer.parseInt(displayAreaPixelChoices[defaultDisplayIndex]);
+      private int visualizationAreaHeightInPixels = Integer.parseInt(displayAreaPixelChoices[defaultDisplayIndex]);
    	
    	//`Values for mapping of reference counts to colors for display.
    	
@@ -189,27 +193,46 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
 		return outerPanel;
 	}
 	private JPanel buildConfigPanel() {
-		JPanel panel = new JPanel();		
-		
-		blockAmount = new JSpinner();
-		blockAmount.setModel(new SpinnerNumberModel(10, 2, 4096, 2));
-		blockAmount.setToolTipText("");
-	/*	blockAmount.addChangeListener(new ChangeListener() {
-			
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				// TODO Auto-generated method stub
-				unitPixelHeight = unitPixelWidth = (int) blockAmount.getValue();
-                 theGrid = createNewGrid();
-                 updateDisplay();
-				
-			}
-		});*/
-		
-		blockSize = new JSpinner();
-		blockSize.setModel(new SpinnerNumberModel(10, 1, 100, 1));
-		blockSize.setToolTipText("");
-		
+		JPanel panel = new JPanel();
+		blockAmount = new JComboBox(wordsPerUnitChoices);
+		blockAmount.setEditable(false);
+		blockAmount.setEditable(false);
+		blockAmount.setBackground(backgroundColor);
+		blockAmount.setSelectedIndex(defaultWordsPerUnitIndex);
+		blockAmount.setToolTipText("Number of memory words represented by one visualization element (rectangle)");
+		blockAmount.addActionListener(
+                new ActionListener() {
+                   public void actionPerformed(ActionEvent e) {
+                     wordsPerUnit = getIntComboBoxSelection(blockAmount);
+                     reset();
+                  }
+               });
+		blockSize = new JComboBox(blockSizing);
+		blockSize.setEditable(false);
+		blockSize.setBackground(backgroundColor);
+		blockSize.setSelectedIndex(defaultBlockSizing);
+		blockSize.setToolTipText("Size of rectangle representing memory");
+		blockSize.addActionListener(
+	                new ActionListener() {
+	                   public void actionPerformed(ActionEvent e) {
+	                     int value = getIntComboBoxSelection(blockSize);
+	                     switch (value) {
+						case 256:
+							unitPixelHeight = unitPixelWidth = 32;
+							break;
+						case 1024:
+						unitPixelHeight = unitPixelWidth = 16;
+							break;
+						case 4096:
+						unitPixelHeight = unitPixelWidth = 8;
+							break;
+						default:
+							break;
+						}
+	                     theGrid = createNewGrid();
+	                     updateDisplay();
+	                  }
+	               });
 		progressbar = new JProgressBar(JProgressBar.HORIZONTAL);
 		progressbar.setStringPainted(true);
 		
@@ -298,7 +321,17 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
        int rows = visualizationAreaHeightInPixels/unitPixelHeight;
        int columns = visualizationAreaWidthInPixels/unitPixelWidth;
        return new Grid(rows,columns);
-    }
+   }
+   public static int getIntComboBoxSelection(JComboBox comboBox) {
+       try {
+          return Integer.parseInt((String)comboBox.getSelectedItem());
+       } 
+           catch (NumberFormatException nfe) {
+          	// Can occur only if initialization list contains badly formatted numbers.  This
+          	// is a developer's error, not a user error, and better be caught before release.
+             return 1;
+          }
+   }
    private class GraphicsPanel extends JPanel {
        // override default paint method to assure visualized reference pattern is produced every time
    	 // the panel is repainted.
