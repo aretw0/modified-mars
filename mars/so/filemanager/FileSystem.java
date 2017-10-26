@@ -5,7 +5,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import mars.so.processmanager.ProcessTable;
@@ -16,6 +18,7 @@ public class FileSystem {
 	private static SuperBlock suBlock;
 	private static List<File> allFiles = new ArrayList<File>();
 	private static List<Inode> allInodes = new ArrayList<Inode>();
+	private static List<File> openedFileList = new ArrayList<File>();
 	public static String homeDir = "fileSystem/";
 
 	public FileSystem() {
@@ -54,6 +57,14 @@ public class FileSystem {
 		FileSystem.allInodes = allInodes;
 	}
 	
+	public static List<File> getOpenedFileList() {
+		return openedFileList;
+	}
+
+	public static void setOpenedFileList(List<File> openedFileList) {
+		FileSystem.openedFileList = openedFileList;
+	}
+
 	public static File openFile(String filename, int mode) {
 		FileManagerObserver.m_taLog.setText(FileManagerObserver.m_taLog.getText() + "Tentando abrir arquivo: " + filename+"\n");
 		filename = ProcessTable.getExeProc().getPidProc()+"/"+filename;		
@@ -98,9 +109,17 @@ public class FileSystem {
 					FileManagerObserver.m_taLog.setText(FileManagerObserver.m_taLog.getText() + "Arquivo " +path + " não existe, criando...\n");
 					aux = new File();
 					if (mode == 1 || mode == 9) {
-						// se mode de leitura, cria o arquivo e seta o path
+						// se mode de leitura, cria o arquivo, seta o path e cria o inode dele
 						aux.setName(path);
 						aux.setPath(homeDir+filename.replace("/", "-"));
+						Inode inode = new Inode();
+						inode.setBlockSize(SuperBlock.getSizeBlock());
+						inode.setByteSize(1);
+						Date d = new Date();
+						inode.setDateBirth(DateFormat.getDateInstance(DateFormat.MEDIUM).format(d));
+						inode.setIdOwner(ProcessTable.getExeProc().getPidProc());
+						FileSystem.getAllInodes().add(inode);
+						aux.setInode(inode);
 						((Directory)FileSystem.getAllFiles().get(indexOrigi)).add(aux);
 						FileManagerObserver.m_taLog.setText(FileManagerObserver.m_taLog.getText() + aux.getName() + " criado com caminho = " +
 						" " +aux.getPath().replaceAll("-", "/") + "\n");
@@ -124,9 +143,8 @@ public class FileSystem {
 			for (File file : FileSystem.getAllFiles()) {
 				if (!(file instanceof Directory))
 					save.println(file.toString());
-				else {
-					save.println(((Directory)file).toString());
-				}
+				else 
+					save.println(((Directory)file).toString());				
 			}
 			arq.close();
 		}catch (Exception e) {
@@ -197,6 +215,7 @@ public class FileSystem {
 		    		 file = new File();
 		    		 file.setName(parans[1]);
 		    		 file.setInode(FileSystem.getAllInodes().get(Integer.valueOf(parans[2])));
+		    		 Spacer.alloc(file.getAllocSize());
 		    		 FileSystem.getAllFiles().add(file);
 		    	}
 		    	else {
@@ -235,5 +254,33 @@ public class FileSystem {
 			}
 		}
 		return null;
+	}
+
+	public static boolean readFile(int fd) {	
+		FileManagerObserver.m_taLog.setText(FileManagerObserver.m_taLog.getText() + "Verificando arquivo para leitura com FileDescriptor: " + fd + "\n");
+		for (File file : getAllFiles()) {
+			if (file.getDescritor() == fd) {
+				FileManagerObserver.m_taLog.setText(FileManagerObserver.m_taLog.getText() + "Arquivo existe no diretório :" + file.getPath() + "\n");
+				return true;
+			}
+				
+		}
+		FileManagerObserver.m_taLog.setText(FileManagerObserver.m_taLog.getText() + "Arquivo não está aberto");
+		return false;
+	}
+
+	public static boolean writeFile(int fd, int lenght) {
+		FileManagerObserver.m_taLog.setText(FileManagerObserver.m_taLog.getText() + "Verificando arquivo para escreita com FileDescriptor: " + fd + "\n");
+		for (File file : getAllFiles()) {
+			if (file.getDescritor() == fd) {
+				FileManagerObserver.m_taLog.setText(FileManagerObserver.m_taLog.getText() + "Arquivo existe no diretório :" + file.getPath() + "\n");
+				if (Spacer.alloc(lenght, file)) {
+					return true;
+				}				
+			}
+				
+		}
+		FileManagerObserver.m_taLog.setText(FileManagerObserver.m_taLog.getText() + "Arquivo não está aberto");
+		return false;
 	}
 }

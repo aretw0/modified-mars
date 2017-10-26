@@ -243,6 +243,7 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
 	                     updateDisplay();
 	                  }
 	               });
+
 		progressbar = new JProgressBar(JProgressBar.HORIZONTAL);
 		progressbar.setStringPainted(true);
 		

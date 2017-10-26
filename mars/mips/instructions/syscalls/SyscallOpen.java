@@ -106,8 +106,10 @@ public class SyscallOpen extends AbstractSyscall {
 						SystemIO.getFileErrorMessage() + " (syscall " + this.getNumber() + ")",
 						Exceptions.SYSCALL_EXCEPTION);
 			}else {
-				// se n deu erro ao abrir o arquivo: define o descritor do arquivo e save os arquivos para persistencia				
+				// se n deu erro ao abrir o arquivo: define o descritor do
+				// arquivo e save os arquivos para persistencia	e coloca na lista de arquivos abertos
 				file.setDescritor(retValue);
+				FileSystem.getOpenedFileList().add(file);
 				FileSystem.saveFiles();
 			}
 		

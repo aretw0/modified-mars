@@ -50,7 +50,30 @@ public class File implements Cloneable {
 
 	@Override
 	public String toString() {
-		return 1+"#"+name+"#"+FileSystem.getAllInodes().indexOf(inode);
+		int indexInode = FileSystem.getAllInodes().indexOf(inode);
+		if (indexInode >= 0)
+			return 1+"#"+name+"#"+indexInode;
+		return 1+"#"+name+"#";
+	}
+	
+	public int getAllocSize() {
+		int size = 0;
+		Inode in = inode;
+		if (inode == null) {
+			return 0;
+		}else {	
+			while (in != null) {
+				for (int i : in.getBlocks()) {
+					if (i != -1) {
+						size++;
+					}
+				}
+				in = in.getNextBlock();
+			}
+		}
+			
+		return size;
+		
 	}
 	
 	public File clone() {

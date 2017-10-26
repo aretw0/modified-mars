@@ -1,9 +1,11 @@
 package mars.so.filemanager;
 
+import mars.tools.FileManagerObserver;
+
 public class SuperBlock {
 
-	private static int sizeBlock; // tamanho dos blocos de alocação
-	private static int blocksAmount; // quantidade de blocos do disco
+	private static int sizeBlock = 2; // tamanho dos blocos de alocação
+	private static int blocksAmount = (int) FileManagerObserver.getIntComboBoxSelection(FileManagerObserver.blockAmount); // quantidade de blocos do disco
 	
 	
 	public SuperBlock() {
@@ -29,4 +31,6 @@ public class SuperBlock {
 	public static void setBlocksAmount(int blocksAmount) {
 		SuperBlock.blocksAmount = blocksAmount;
 	}
+	
+	
 }

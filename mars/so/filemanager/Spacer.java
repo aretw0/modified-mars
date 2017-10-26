@@ -1,17 +1,14 @@
 package mars.so.filemanager;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import mars.tools.FileManagerObserver;
 
 public class Spacer { // nosso gerenciador de espaço livre
 	
 	private static boolean init; // inicializado
-	private int [] blocks;
+	private static int [] blocks = new int[FileManagerObserver.getIntComboBoxSelection(FileManagerObserver.blockAmount)];
 
-	public Spacer() { 
-		setBlocks(new int[FileManagerObserver.getIntComboBoxSelection(FileManagerObserver.blockAmount)]);
+	public Spacer() {
+		
 	}
 
 	public static boolean isInit() {
@@ -27,11 +24,52 @@ public class Spacer { // nosso gerenciador de espaço livre
 	}
 
 	public void setBlocks(int [] blocks) {
-		this.blocks = blocks;
+		Spacer.blocks = blocks;
 	}
 	
-	public static boolean canAlloc(String filename, int size) {
-		return init;
+	public static boolean alloc(int lenght, File file) {
+		// criar o inode e alocar no file
+		double allocBloks = Math.ceil(file.getAllocSize()/8);
+		Inode aux = file.getInode();
+		int k = 0;
+		int j = 0;
+		for (j = 0; j < blocks.length; j++) {
+			if (blocks[j] == 0) 
+				break;
+		}
+		for (int i = 0; i < Math.ceil(lenght/SuperBlock.getSizeBlock()); i++, j++) {				
+			aux.getBlocks()[k] = 1;
+			k++;
+			blocks[j] = 1;
+			if (k>7) {
+				k = 0;
+				aux.setNextBlock(new Inode());
+				FileSystem.getAllInodes().add(aux.getNextBlock());
+				aux = aux.getNextBlock();								
+			}
+		}
+		FileSystem.saveInode();
+		return true;
 		
+	}	
+	
+	public static void unalloc(int lenght) {
+		
+	}
+
+	public static boolean alloc(int lenght) {
+		int j;
+		for (j = 0; j < blocks.length; j++) {
+			if (blocks[j] == 0) 
+				break;
+		}
+		for (int i = 0; i < Math.ceil(lenght/SuperBlock.getSizeBlock()); i++, j++) {			
+			blocks[j] = 1;
+			if (j > blocks.length) {
+				FileManagerObserver.m_taLog.setText(FileManagerObserver.m_taLog.getText() + " Espa�o insuficiente para armazenar");
+				return false;
+			}
+		}
+		return true;
 	}
 }

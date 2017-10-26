@@ -13,8 +13,8 @@ public class Inode {
 	private String dateChange; // data de modificação
 	private Boolean hide; // flag para ocultar o arquivo
 
-	private int [] blocks;
-	private Inode nextBlock;
+	private int [] blocks = {-1, -1, -1, -1, -1, -1, -1, -1};
+	private Inode nextBlock = null;
 
 	/* Os 7 primeiros endereços correspondem aos endereços do disco
 	indicados pelo gerenciador de espaço livre
@@ -37,7 +37,7 @@ public class Inode {
 	}
 	
 	public Inode() {
-		this.blocks = new int[8];
+		
 	}
 		
 	public int getIdOwner() {
