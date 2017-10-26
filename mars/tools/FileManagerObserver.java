@@ -13,14 +13,18 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 
 import java.util.*;
 
 public class FileManagerObserver extends AbstractMarsToolAndApplication {
 	
-	private JTextField m_tfAddress;
-	private JTextField m_tfIndex;
-
 	private Graphics drawingArea;
     private JPanel canvas;
     private JPanel results;
@@ -32,9 +36,10 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
     
 	public static JComboBox blockAmount;
 	public static JComboBox blockSize;
-	private JProgressBar progressbar;
+	public static JProgressBar progressbar;
+	public static int blockUse = 0; // para definir progressbar
 	
-	private JTree treeFile;
+	private DynamicTree treePanel;
 	
 	/** text field for log output */
 	public static JTextArea m_taLog;
@@ -45,6 +50,42 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
 	/* ESTOU ME INSPIRANDO NO MEMORY REFERENCE VISUALIZATION
 	 * 
 	 * Ia tentar usar os controles dela que são com combobox
+	 * 
+	 * COM UNIT 32X32
+	 * DIPLAY 512*256
+	 * 16*8 = 128 BLOCOS
+	 * 
+	 * COM UNIT 16X16
+	 * DIPLAY 512*256
+	 * 32*16 = 512 BLOCOS
+	 * 
+	 * COM UNIT 8X8
+	 * DIPLAY 512*256
+	 * 64*32 = 2048 BLOCOS
+	 * 
+	 * COM UNIT 4X4
+	 * DIPLAY 512*256
+	 * 128*64 = 8192 BLOCOS
+	 * 
+	 *************************
+	 * 
+	 * COM UNIT 32X32
+	 * DIPLAY 256*256
+	 * 8*8 = 64 BLOCOS
+	 * 
+	 * COM UNIT 16X16
+	 * DIPLAY 256*256
+	 * 16*16 = 256 BLOCOS
+	 * 
+	 * COM UNIT 8X8
+	 * DIPLAY 256*256
+	 * 32*32 = 1024 BLOCOS
+	 * 
+	 * COM UNIT 4X4
+	 * DIPLAY 256*256
+	 * 64*64 = 4096 BLOCOS
+	 * 
+	 *************************
 	 * 
 	 * COM UNIT 32X32
 	 * DIPLAY 512*512
@@ -63,12 +104,12 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
    	
       private final String[] wordsPerUnitChoices  = {"1","2","4","8","16","32","64","128","256","512","1024","2048"};
       private final int defaultWordsPerUnitIndex  = 0;
-      private final String[] blockSizing  = {"256","1024","4096"};
-      private final int defaultBlockSizing = 0;
+      private final String[] blockSizing  = {"128","512","2048","8192"};
+      private final int defaultBlockSizing = 2;
       private final String[] visualizationUnitPixelChoices  = {"1","2","4","8","16","32"};
-      private final int defaultVisualizationUnitPixelIndex  = 5;
+      private final int defaultVisualizationUnitPixelIndex  = 3;
       private final String[] displayAreaPixelChoices  = {"64","128","256","512","1024"};
-      private final int defaultDisplayIndex  = 3;
+      private final int defaultDisplayIndex  = 2;
       private final boolean defaultDrawHashMarks = true;
    
       // Values for display canvas.  Note their initialization uses the identifiers just above.
@@ -76,8 +117,8 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
       private int unitPixelWidth = Integer.parseInt(visualizationUnitPixelChoices[defaultVisualizationUnitPixelIndex]);
       private int unitPixelHeight = Integer.parseInt(visualizationUnitPixelChoices[defaultVisualizationUnitPixelIndex]);
       private int wordsPerUnit = Integer.parseInt(wordsPerUnitChoices[defaultWordsPerUnitIndex]);
-      private int visualizationAreaWidthInPixels = Integer.parseInt(displayAreaPixelChoices[defaultDisplayIndex]);
-      private int visualizationAreaHeightInPixels = Integer.parseInt(displayAreaPixelChoices[defaultDisplayIndex]);
+      private int visualizationAreaWidthInPixels = 512;
+      private int visualizationAreaHeightInPixels = 256;
    	
    	//`Values for mapping of reference counts to colors for display.
    	
@@ -139,96 +180,64 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
 		JPanel panel = new JPanel();
 
 
-		treeFile = new JTree();
+
    		BorderLayout layout = new BorderLayout();
    		layout.setVgap(10);
    		layout.setHgap(10);
    		panel.setLayout(layout);
    	
    		panel.add(buildConfigPanel(), BorderLayout.NORTH);
-		panel.add(buildInfoPanel(), BorderLayout.WEST);
+   		panel.add(new JScrollPane(buildInfoPanel()), BorderLayout.WEST);
 		panel.add(buildLogPanel(), BorderLayout.SOUTH);
 		panel.add(buildVisualizationArea(), BorderLayout.CENTER);
-		panel.add(new JScrollPane(treeFile), BorderLayout.EAST);
    		
    		
    		return panel;
 	}
 	private JPanel buildInfoPanel() {		
-		
-		m_tfAddress = new JTextField();
-		m_tfIndex = new JTextField();
-	
-		
-		m_tfAddress.setColumns(10);
-		m_tfAddress.setEditable(false);
-		m_tfAddress.setHorizontalAlignment(JTextField.CENTER);
-		m_tfIndex.setColumns(10);
-		m_tfIndex.setEditable(false);
-		m_tfIndex.setHorizontalAlignment(JTextField.CENTER);			
-		
-		JPanel panel = new JPanel();	
-		JPanel outerPanel = new JPanel();
-		outerPanel.setLayout(new BorderLayout());		
-		
-		GridBagLayout gbl = new GridBagLayout();		
-		panel.setLayout(gbl);
-		
-		GridBagConstraints c = new GridBagConstraints();
-		GridBagConstraints c1 = new GridBagConstraints();
-		
-		c.insets = new Insets(5, 5, 2, 5);
-		c.gridx = 1;		 
-		c.gridy = 1;
-		
-		panel.add(new JLabel("@ Address"), c);		
-		c.gridy++;
-		panel.add(m_tfAddress, c);
-		c.gridy++;
-		panel.add(new JLabel("-> Index"), c);
-		c.gridy++;
-		panel.add(m_tfIndex, c);
-						
-		outerPanel.add(panel, BorderLayout.NORTH);
-		return outerPanel;
+		return treePanel = new DynamicTree();
 	}
 	private JPanel buildConfigPanel() {
 		JPanel panel = new JPanel();
-		blockAmount = new JComboBox(wordsPerUnitChoices);
-		blockAmount.setEditable(false);
-		blockAmount.setEditable(false);
-		blockAmount.setBackground(backgroundColor);
-		blockAmount.setSelectedIndex(defaultWordsPerUnitIndex);
-		blockAmount.setToolTipText("Number of memory words represented by one visualization element (rectangle)");
-		blockAmount.addActionListener(
+		blockSize = new JComboBox(wordsPerUnitChoices);
+		blockSize.setEditable(false);
+		blockSize.setEditable(false);
+		blockSize.setBackground(backgroundColor);
+		blockSize.setSelectedIndex(defaultWordsPerUnitIndex);
+		blockSize.setToolTipText("Number of memory words represented by one visualization element (rectangle)");
+		blockSize.addActionListener(
                 new ActionListener() {
                    public void actionPerformed(ActionEvent e) {
-                     wordsPerUnit = getIntComboBoxSelection(blockAmount);
+                     wordsPerUnit = getIntComboBoxSelection(blockSize);
                      reset();
                   }
                });
-		blockSize = new JComboBox(blockSizing);
-		blockSize.setEditable(false);
-		blockSize.setBackground(backgroundColor);
-		blockSize.setSelectedIndex(defaultBlockSizing);
-		blockSize.setToolTipText("Size of rectangle representing memory");
-		blockSize.addActionListener(
+		blockAmount = new JComboBox(blockSizing);
+		blockAmount.setEditable(false);
+		blockAmount.setBackground(backgroundColor);
+		blockAmount.setSelectedIndex(defaultBlockSizing);
+		blockAmount.setToolTipText("Number of rectangles representing memory");
+		blockAmount.addActionListener(
 	                new ActionListener() {
 	                   public void actionPerformed(ActionEvent e) {
-	                     int value = getIntComboBoxSelection(blockSize);
+	                     int value = getIntComboBoxSelection(blockAmount);
 	                     switch (value) {
-						case 256:
-							unitPixelHeight = unitPixelWidth = 32;
-							break;
-						case 1024:
-						unitPixelHeight = unitPixelWidth = 16;
-							break;
-						case 4096:
-						unitPixelHeight = unitPixelWidth = 8;
-							break;
-						default:
-							break;
-						}
+	                     
+		                    case 128:
+								unitPixelHeight = unitPixelWidth = 32;
+		                    	break;
+							case 512:
+								unitPixelHeight = unitPixelWidth = 16;
+								break;
+							case 2048:
+							unitPixelHeight = unitPixelWidth = 8;
+								break;
+							case 8192:
+							unitPixelHeight = unitPixelWidth = 4;
+								break;
+							default:
+								break;
+	                     }
 	                     theGrid = createNewGrid();
 	                     updateDisplay();
 	                  }
@@ -237,9 +246,9 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
 		progressbar.setStringPainted(true);
 		
 		panel.add(new JLabel("# of DISK entries"));
-		panel.add(blockSize);
-		panel.add(new JLabel("Alocation size"));
 		panel.add(blockAmount);
+		panel.add(new JLabel("Alocation size"));
+		panel.add(blockSize);
 		
 		panel.add(new JLabel("Use so far:"));
 		panel.add(progressbar);
@@ -260,11 +269,11 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
 		return panel;
 	}
 	
-	private JPanel buildSelectPanel() {
+/*	private JPanel buildSelectPanel() {
 		JPanel selectPanel = new JPanel();
 		
 		return selectPanel;
-	}
+	}*/
 	
 	protected void initializePreGUI() {
         counterColorScale = new CounterColorScale(defaultCounterColors);
@@ -277,7 +286,7 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
      protected void initializePostGUI() {
         wordsPerUnit = Integer.parseInt(wordsPerUnitChoices[defaultWordsPerUnitIndex]);
         theGrid = createNewGrid();
-      //  updateBaseAddress();
+//        updateBaseAddress();
      }
       protected void reset() {
         resetCounts();
@@ -285,6 +294,8 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
      }
        protected void updateDisplay() {
         canvas.repaint();
+        progressbar.setValue(blockUse);
+        progressbar.setMaximum(getIntComboBoxSelection(blockAmount));
      }
 	
 	private JComponent buildVisualizationArea() {
@@ -511,5 +522,118 @@ public class FileManagerObserver extends AbstractMarsToolAndApplication {
              }
           }
        }
-    }  
+    }
+     public class DynamicTree extends JPanel {
+    	    protected DefaultMutableTreeNode rootNode;
+    	    protected DefaultTreeModel treeModel;
+    	    protected JTree tree;
+    	    private Toolkit toolkit = Toolkit.getDefaultToolkit();
+    	 
+    	    public DynamicTree() {
+    	        super(new GridLayout(1,0));
+    	         
+    	        rootNode = new DefaultMutableTreeNode("Root Node");
+    	        treeModel = new DefaultTreeModel(rootNode);
+    	    treeModel.addTreeModelListener(new MyTreeModelListener());
+    	        tree = new JTree(treeModel);
+    	        tree.setEditable(false);
+    	        tree.getSelectionModel().setSelectionMode
+    	                (TreeSelectionModel.SINGLE_TREE_SELECTION);
+    	        tree.setShowsRootHandles(true);
+    	 
+    	        JScrollPane scrollPane = new JScrollPane(tree);
+    	        add(scrollPane);
+    	    }
+    	 
+    	    /** Remove all nodes except the root node. */
+    	    public void clear() {
+    	        rootNode.removeAllChildren();
+    	        treeModel.reload();
+    	    }
+    	 
+    	    /** Remove the currently selected node. */
+    	    public void removeCurrentNode() {
+    	        TreePath currentSelection = tree.getSelectionPath();
+    	        if (currentSelection != null) {
+    	            DefaultMutableTreeNode currentNode = (DefaultMutableTreeNode)
+    	                         (currentSelection.getLastPathComponent());
+    	            MutableTreeNode parent = (MutableTreeNode)(currentNode.getParent());
+    	            if (parent != null) {
+    	                treeModel.removeNodeFromParent(currentNode);
+    	                return;
+    	            }
+    	        } 
+    	 
+    	        // Either there was no selection, or the root was selected.
+    	        toolkit.beep();
+    	    }
+    	 
+    	    /** Add child to the currently selected node. */
+    	    public DefaultMutableTreeNode addObject(Object child) {
+    	        DefaultMutableTreeNode parentNode = null;
+    	        TreePath parentPath = tree.getSelectionPath();
+    	 
+    	        if (parentPath == null) {
+    	            parentNode = rootNode;
+    	        } else {
+    	            parentNode = (DefaultMutableTreeNode)
+    	                         (parentPath.getLastPathComponent());
+    	        }
+    	 
+    	        return addObject(parentNode, child, true);
+    	    }
+    	 
+    	    public DefaultMutableTreeNode addObject(DefaultMutableTreeNode parent,
+    	                                            Object child) {
+    	        return addObject(parent, child, false);
+    	    }
+    	 
+    	    public DefaultMutableTreeNode addObject(DefaultMutableTreeNode parent,
+    	                                            Object child, 
+    	                                            boolean shouldBeVisible) {
+    	        DefaultMutableTreeNode childNode = 
+    	                new DefaultMutableTreeNode(child);
+    	 
+    	        if (parent == null) {
+    	            parent = rootNode;
+    	        }
+    	     
+    	    //It is key to invoke this on the TreeModel, and NOT DefaultMutableTreeNode
+    	        treeModel.insertNodeInto(childNode, parent, 
+    	                                 parent.getChildCount());
+    	 
+    	        //Make sure the user can see the lovely new node.
+    	        if (shouldBeVisible) {
+    	            tree.scrollPathToVisible(new TreePath(childNode.getPath()));
+    	        }
+    	        return childNode;
+    	    }
+    	 
+    	    class MyTreeModelListener implements TreeModelListener {
+    	        public void treeNodesChanged(TreeModelEvent e) {
+    	            DefaultMutableTreeNode node;
+    	            node = (DefaultMutableTreeNode)(e.getTreePath().getLastPathComponent());
+    	 
+    	            /*
+    	             * If the event lists children, then the changed
+    	             * node is the child of the node we've already
+    	             * gotten.  Otherwise, the changed node and the
+    	             * specified node are the same.
+    	             */
+    	 
+    	                int index = e.getChildIndices()[0];
+    	                node = (DefaultMutableTreeNode)(node.getChildAt(index));
+    	 
+    	            System.out.println("The user has finished editing the node.");
+    	            System.out.println("New value: " + node.getUserObject());
+    	        }
+    	        public void treeNodesInserted(TreeModelEvent e) {
+    	        }
+    	        public void treeNodesRemoved(TreeModelEvent e) {
+    	        }
+    	        public void treeStructureChanged(TreeModelEvent e) {
+    	        }
+    	    }
+    	}
+
 }
