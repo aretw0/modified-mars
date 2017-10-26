@@ -13,9 +13,9 @@ warnW: .asciiz "Falha na escrita\n"
 warnR: .asciiz "Falha na leitura\n"
 
 # Saida
-output1: .asciiz "___________________________________________"
-output2: .asciiz "___________________________________________"
-output3: .asciiz "___________________________________________"
+output1: .space 1024
+output2: .space 1024
+output3: .space 1024
 # linefeed
 endl: .asciiz "\n"
 
@@ -42,10 +42,18 @@ file35: .asciiz "dir3/dir31/dir311/arquivo35.txt"
 
 # body writing
 body1: .asciiz "The quick brown fox jumps over the lazy dog " # tem 44 caracteres
-chunk1: .asciiz "The quick b" # tem 11 caracteres
-chunk2: .asciiz "rown fox ju" # tem 11 caracteres
-chunk3: .asciiz "mps over th" # tem 11 caracteres
-chunk4: .asciiz "e lazy dog " # tem 11 caracteres
+chunk11: .asciiz "The quick b" # tem 11 caracteres
+chunk21: .asciiz "rown fox ju" # tem 11 caracteres
+chunk31: .asciiz "mps over th" # tem 11 caracteres
+chunk41: .asciiz "e lazy dog " # tem 11 caracteres
+chunk12: .asciiz "The slowly " # tem 11 caracteres
+chunk22: .asciiz "red fox was" # tem 11 caracteres
+chunk32: .asciiz " taken by t" # tem 11 caracteres
+chunk42: .asciiz "he lazy dog" # tem 11 caracteres
+chunk13: .asciiz "The quick b" # tem 11 caracteres
+chunk23: .asciiz "rown dog kn" # tem 11 caracteres
+chunk33: .asciiz "ocked the l" # tem 11 caracteres
+chunk43: .asciiz "azy red fox" # tem 11 caracteres
 
 .text
 #criação dos processos
@@ -66,16 +74,16 @@ Programa1: # escreve no dir1/arquivo11.txt
 rightOpen11:
 	add $s0,$v0,$zero # salvando file description
 	prinThis(openOk)
-	writing(chunk1,11,warnW,rightWrite111,fimAll1)
+	writing(chunk11,11,warnW,rightWrite111,fimAll1)
 rightWrite111:
 	prinThis(writeOk)
-	writing(chunk2,11,warnW,rightWrite112,fimAll1)
+	writing(chunk21,11,warnW,rightWrite112,fimAll1)
 rightWrite112:
 	prinThis(writeOk)
-	writing(chunk3,11,warnW,rightWrite113,fimAll1)
+	writing(chunk31,11,warnW,rightWrite113,fimAll1)
 rightWrite113:
 	prinThis(writeOk)
-	writing(chunk4,11,warnW,rightWrite114,fimAll1)
+	writing(chunk41,11,warnW,rightWrite114,fimAll1)
 rightWrite114:
 	prinThis(writeOk)
 	closing(closeOk)
@@ -98,16 +106,16 @@ Programa2: # escreve no dir2/arquivo21.txt
 rightOpen21:
 	add $s0,$v0,$zero # salvando file description
 	prinThis(openOk)
-	writing(chunk1,11,warnW,rightWrite211,fimAll2)
+	writing(chunk12,11,warnW,rightWrite211,fimAll2)
 rightWrite211:
 	prinThis(writeOk)
-	writing(chunk2,11,warnW,rightWrite212,fimAll2)
+	writing(chunk22,11,warnW,rightWrite212,fimAll2)
 rightWrite212:
 	prinThis(writeOk)
-	writing(chunk3,11,warnW,rightWrite213,fimAll2)
+	writing(chunk32,11,warnW,rightWrite213,fimAll2)
 rightWrite213:
 	prinThis(writeOk)
-	writing(chunk4,11,warnW,rightWrite214,fimAll2)
+	writing(chunk42,11,warnW,rightWrite214,fimAll2)
 rightWrite214:
 	prinThis(writeOk)
 	closing(closeOk)
@@ -130,16 +138,16 @@ Programa3: # escreve no dir3/arquivo31.txt
 rightOpen31:
 	add $s0,$v0,$zero # salvando file description
 	prinThis(openOk)
-	writing(chunk1,11,warnW,rightWrite311,fimAll3)
+	writing(chunk13,11,warnW,rightWrite311,fimAll3)
 rightWrite311:
 	prinThis(writeOk)
-	writing(chunk2,11,warnW,rightWrite312,fimAll3)
+	writing(chunk23,11,warnW,rightWrite312,fimAll3)
 rightWrite312:
 	prinThis(writeOk)
-	writing(chunk3,11,warnW,rightWrite313,fimAll3)
+	writing(chunk33,11,warnW,rightWrite313,fimAll3)
 rightWrite313:
 	prinThis(writeOk)
-	writing(chunk4,11,warnW,rightWrite314,fimAll3)
+	writing(chunk43,11,warnW,rightWrite314,fimAll3)
 rightWrite314:
 	prinThis(writeOk)
 	closing(closeOk)
