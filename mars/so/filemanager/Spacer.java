@@ -37,7 +37,8 @@ public class Spacer { // nosso gerenciador de espaço livre
 			if (blocks[j] == 0) 
 				break;
 		}
-		for (int i = 0; i < Math.ceil(lenght/SuperBlock.getSizeBlock()); i++, j++) {				
+		for (int i = 0; i < Math.ceil(lenght/SuperBlock.getSizeBlock()); i++, j++) {	
+			FileManagerObserver.blockUse++;
 			aux.getBlocks()[k] = j;
 			k++;
 			blocks[j] = 1;
@@ -63,7 +64,8 @@ public class Spacer { // nosso gerenciador de espaço livre
 			if (blocks[j] == 0) 
 				break;
 		}
-		for (int i = 0; i < Math.ceil(lenght/SuperBlock.getSizeBlock()); i++, j++) {			
+		for (int i = 0; i < Math.ceil(lenght/SuperBlock.getSizeBlock()); i++, j++) {
+			FileManagerObserver.blockUse++;
 			blocks[j] = 1;
 			if (j > blocks.length) {
 				FileManagerObserver.m_taLog.setText(FileManagerObserver.m_taLog.getText() + " Espa�o insuficiente para armazenar");
