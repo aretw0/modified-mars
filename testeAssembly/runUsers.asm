@@ -51,8 +51,7 @@ bodySp: .asciiz "Eu amei pagar a cadeira de sistemas operacionais com meu querid
 # 82
 
 bodySp1: .asciiz "Work it, make it, do it, makes us\nHarder, better, faster, stronger\nMore than, our, hour, ever\nEver, after, work is, over\nWork it, make it, do it, makes us\nHarder, better, faster, stronger\nWork it harder, make it better\nDo it faster, makes us stronger\nMore than ever, hour after hour\nWork is never over\nWork it harder, make it better\nDo it faster, makes us stronger\nMore than ever, hour after hour\nWork is never over" 
-# 428
-
+# 415
 .text
 #criação dos processos
 	fork(Programa1, Programa2, 8, 0, 15)
@@ -104,7 +103,7 @@ rightWrite14:
 rightOpen15:
 	add $s0,$v0,$zero # salvando file description
 	prinThis(openOk)
-	writing(bodySp1,428,warnW,rightWrite15,fimAll1)
+	writing(bodySp1,415,warnW,rightWrite15,fimAll1)
 rightWrite15:
 	prinThis(writeOk)
 	closing(closeOk)

@@ -1,6 +1,1 @@
-0#fileSystem#1
-0#4194388#2
-0#a#3
-0#b#4
-0#c#5
-0#arquivo2.txt
+0#fileSystem#
